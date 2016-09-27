@@ -1,0 +1,68 @@
+{
+  "templates": {
+    "objectDescriptor": {
+      "type": "ontological_category",
+      "referent": "referent",
+      "givenness": "givenness",
+      "number": "number",
+      "specificWh": "specificWh",
+      "description": {
+        "parameters": "description"
+      },
+      "gender": "gender",
+      "pointers": {
+        "PropertyModifier": {
+          "property": "value"
+        },
+        "ScalarModifier": {
+          "property": "value"
+        },
+        "TrajectorLandmark": {
+          "decriptor": "locationDescriptor"
+        },
+        "EventDescriptor": {
+          "descriptor": "processDescriptor"
+        },
+        "PartWhole": {
+          "part": {
+            "descriptor": "objectDescriptor"
+          }
+        },
+        "Modification": {
+          "modifier": null
+        }
+      }
+    },
+    "RDExtras": {
+      "specificWh": "specificWh",
+      "event": {
+        "eventDescription": "event"
+      },
+      "quantity": {
+        "parameters": "quantity"
+      }
+    },
+    "spgDescriptor": {
+      "goal": null,
+      "source": null,
+      "path": null
+    },
+    "locationDescriptor": {
+      "relation": null,
+      "objectDescriptor": {
+        "descriptor": "objectDescriptor"
+      }
+    },
+    "processFeatures": {
+      "tense": "tense",
+      "voice": "voice",
+      "negated": "negated",
+      "progressive": "progressive"
+    },
+    "eventFeatures": {
+      "modality": "modality",
+      "negated": "negated",
+      "tense": "tense"
+    }
+  }
+}

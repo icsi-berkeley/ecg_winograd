@@ -1,0 +1,14 @@
+{
+  "templates": {
+    "imperative": {
+      "predicate_type": "command",
+      "return_type": "error_descriptor",
+      "eventDescriptor": null
+    },
+    "conditional_imperative": {
+      "predicate_type": "conditional_imperative",
+      "return_type": "error_descriptor",
+      "eventDescriptor": null
+    }
+  }
+}
