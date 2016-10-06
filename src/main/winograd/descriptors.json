@@ -1,68 +1,66 @@
 {
-  "templates": {
+"templates": {
     "objectDescriptor": {
-      "type": "ontological_category",
-      "referent": "referent",
-      "givenness": "givenness",
-      "number": "number",
-      "specificWh": "specificWh",
-      "description": {
-        "parameters": "description"
-      },
-      "gender": "gender",
-      "pointers": {
-        "PropertyModifier": {
-          "property": "value"
-        },
-        "ScalarModifier": {
-          "property": "value"
-        },
-        "TrajectorLandmark": {
-          "decriptor": "locationDescriptor"
-        },
-        "EventDescriptor": {
-          "descriptor": "processDescriptor"
-        },
-        "PartWhole": {
-          "part": {
-            "descriptor": "objectDescriptor"
-          }
-        },
-        "Modification": {
-          "modifier": null
+        "ontological_category": "ontological_category",
+        "referent": "referent",
+        "givenness": "givenness",
+        "number": "number",
+        "specificWh": "specificWh",
+        "description": {"parameters": "description"},
+        "gender": "gender",
+        "pointers": {
+            "PropertyModifier": {"property": "value"},
+            "ScalarModifier": {"property": "value"},
+            "TrajectorLandmark": {"decriptor": "locationDescriptor"},
+            "EventDescriptor": {"descriptor": "processDescriptor"},
+            "PartWhole": {"part": {"descriptor": "objectDescriptor"}},
+            "Modification": {"modifier": null},
+            "RefIdentity": {"second": "objectDescriptor"},
+            "NounNounModifier": {"modifier": "objectDescriptor"},
+            "Possession": {"possessor": "objectDescriptor"},
+            "Relation": "relationDescriptor",
+            "TernaryRelation": "relationDescriptor",
+            "MetaphoricalScalarModification": {"property": "value"}
         }
-      }
     },
     "RDExtras": {
-      "specificWh": "specificWh",
-      "event": {
-        "eventDescription": "event"
-      },
-      "quantity": {
-        "parameters": "quantity"
-      }
+        "specificWh": "specificWh",
+        "event": {"eventDescription": "event"},
+        "quantity": {"parameters": "quantity"}
+    },
+    "relationDescriptor": {
+        "entity2": {"descriptor": "objectDescriptor"},
+        "entity3": {"descriptor": "objectDescriptor"},
+        "entities": {"descriptor": "objectDescriptor"},
+        "relation": "relation"
+    },
+    "Process": {
+        "pointers": {
+            "ScalarAdverbModifier": {"property": "property", "value": "value"},
+            "AdjunctModification": ["Accompaniment", "Instrument"]
+        }
     },
     "spgDescriptor": {
-      "goal": null,
-      "source": null,
-      "path": null
+        "goal": null,
+        "source": null,
+        "path": null
     },
     "locationDescriptor": {
-      "relation": null,
-      "objectDescriptor": {
-        "descriptor": "objectDescriptor"
-      }
+        "relation": null,
+        "objectDescriptor": {"descriptor": "objectDescriptor"}
     },
     "processFeatures": {
-      "tense": "tense",
-      "voice": "voice",
-      "negated": "negated",
-      "progressive": "progressive"
+        "tense": "tense",
+        "voice": "voice",
+        "negated": "negated",
+        "progressive": "progressive"
     },
     "eventFeatures": {
-      "modality": "modality",
-      "negated": "negated",
-      "tense": "tense"
+        "modality": "modality",
+        "negated": "negated",
+        "tense": "tense",
+        "duration": "duration",
+        "telicity": "telicity"
     }
-  }
+}
 }

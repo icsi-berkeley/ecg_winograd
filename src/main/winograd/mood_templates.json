@@ -1,14 +1,27 @@
-{
-  "templates": {
+{"templates": {
     "imperative": {
-      "predicate_type": "command",
-      "return_type": "error_descriptor",
-      "eventDescriptor": null
+        "predicate_type": "command",
+        "return_type": "error_descriptor",
+        "eventDescriptor": null,
+        "speechAct": "speechAct"
     },
-    "conditional_imperative": {
-      "predicate_type": "conditional_imperative",
-      "return_type": "error_descriptor",
-      "eventDescriptor": null
+    "yn_question": {
+        "predicate_type": "query",
+        "return_type": "boolean",
+        "eventDescriptor": null,
+        "speechAct": "speechAct"
+    },
+    "wh_question": {
+        "predicate_type": "query",
+        "return_type": "none",
+        "eventDescriptor": null,
+        "speechAct": "speechAct"
+    },
+    "declarative": {
+        "predicate_type": "assertion",
+        "return_type": "error_descriptor",
+        "eventDescriptor": null,
+        "speechAct": "speechAct"
     }
-  }
+    }
 }

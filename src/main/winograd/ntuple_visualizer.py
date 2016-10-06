@@ -3,6 +3,7 @@
 A simple program to output n-tuples using Analyzer+Specializer. Not reliant on any packages other than Jython.
 """
 
+from nluas.language.core_specializer import *
 from winograd_specializer import *
 from nluas.ntuple_decoder import *
 import traceback
@@ -10,20 +11,20 @@ import traceback
 decoder = NtupleDecoder()
 
 analyzer = Analyzer("http://localhost:8090")
-rs = WinogradSpecializer(analyzer)
+ws = WinogradSpecializer(analyzer)
 
 while True:
     text = input("> ")
     if text == "q":
         quit()
     elif text == "d":
-        rs.debug_mode = True
+        ws.debug_mode = True
     else:
         try:
             semspecs = analyzer.parse(text)
             for fs in semspecs:
                 try:
-                    ntuple = rs.specialize(fs)
+                    ntuple = ws.specialize(fs)
                     pprint(ntuple)
                     decoder.pprint_ntuple(ntuple)
                     break

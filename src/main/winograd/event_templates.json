@@ -1,36 +1,21 @@
 {
-  "templates": {
+"templates": {
     "ConditionalED": {
-      "condition": {
-        "eventDescription": "ed1"
-      },
-      "core": {
-        "eventDescription": "ed2"
-      },
-      "else": {
-        "eventDescription": "ed3"
-      },
-      "complexKind": "complexKind"
+        "condition": {"eventDescription": "ed1"},
+        "conclusion": {"eventDescription": "ed2"},
+        "alternative": {"eventDescription": "ed3"},
+        "complexKind": "complexKind",
+        "conditionalValue": "conditionalValue"
     },
     "ComplexED": {
-      "condition": {
-        "eventDescription": "ed1"
-      },
-      "core": {
-        "eventDescription": "ed2"
-      },
-      "complexKind": "complexKind"
+        "condition": {"eventDescription": "ed1"},
+        "core": {"eventDescription": "ed2"},
+        "complexKind": "complexKind"
     },
     "EventDescriptor": {
-      "eventProcess": {
-        "parameters": "eventProcess"
-      },
-      "e_features": {
-        "descriptor": "eventFeatures"
-      },
-      "profiledParticipant": {
-        "descriptor": "objectDescriptor"
-      }
+        "profiledParticipant": {"descriptor": "objectDescriptor"},
+        "eventProcess": {"parameters": "eventProcess"},
+        "e_features": {"descriptor": "eventFeatures"}
     }
-  }
+}
 }
