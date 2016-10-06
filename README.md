@@ -6,10 +6,6 @@ To install, use:
 
 `git clone https://github.com/icsi-berkeley/ecg_winograd.git`
 
-Then update the submodules:
-
-`cd ecg_winograd`  
-`git submodule init`  
-`git submodule update`  
+Make sure that ecg_grammars and ecg_framework_code are in adjacent folders.
 
 For more information about the system, look here: https://github.com/icsi-berkeley/ecg_homepage/wiki
