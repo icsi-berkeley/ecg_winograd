@@ -3,7 +3,6 @@
 A simple program to output n-tuples using Analyzer+Specializer. Not reliant on any packages other than Jython.
 """
 
-from nluas.language.core_specializer import *
 from winograd_specializer import *
 from nluas.ntuple_decoder import *
 import traceback

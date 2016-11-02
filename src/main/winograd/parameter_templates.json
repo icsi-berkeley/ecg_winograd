@@ -1,122 +1,221 @@
 {
-"templates": {
-    "MotionPath": {
-        "parents": ["Process"],
-        "control_state": "ongoing",
-        "heading": {"descriptor": "headingDescriptor", "default": {"headingDescriptor": "north"}},
-        "distance": {"descriptor": "scaleDescriptor", "default": {"scaleDescriptor": {"units": "inches", "value": 4.0, "property": "distance"}}},
-        "spg": {"descriptor": "spgDescriptor"},
-        "direction": "direction",
-        "speed": 0.5
-    },
-    "Communication": {
-        "parents": ["Process"],
-        "content": {"eventDescription": "content"},
-        "media": {"descriptor": "objectDescriptor"},
-        "listener": {"descriptor": "objectDescriptor"}
-    },
-    "Thought": {
-        "parents": ["Process"],
-        "content": {"eventDescription": "content"},
-        "thinker": {"descriptor": "objectDescriptor"}
-    },
-    "ObjectTransfer": {
-        "parents": ["ComplexProcess"],
-        "getter": {"descriptor": "objectDescriptor"},
-        "theme": {"descriptor": "objectDescriptor"}
-    },
-    "Manipulation": {
-        "parents": ["Process"],
-        "manipulated_entity": {"descriptor": "objectDescriptor"}
-    },
-    "Stasis": {
-        "parents": ["Process"],
-        "state": {"method": "get_state"}
-    },
-    "Quantity": {
-        "units": "units",
-        "property": "property",
-        "amount": {"parameters": "amount"}
-    },
-    "QuantitySchema": {
-        "value": 0.5,
-        "number": "number"
-    },
-    "ForceApplication": {
-        "parents": ["Process"],
-        "control_state": "ongoing",
-        "actedUpon": {"descriptor": "objectDescriptor"}
-    },
-    "StagedProcess": {
-        "parents": ["Process"],
-        "control_state": "stageRole",
-        "process": {"parameters": "process"}
-    },
-    "Perception": {
-        "parents": ["Process"],
-        "content": {"descriptor": "objectDescriptor"}
-    },
-    "ChangeLocation": {
-        "parents": ["Process"],
-        "landmark": {"descriptor": "objectDescriptor"}
-    },
-    "CausalAction" :{
-        "parents": ["Process"],
-        "fdType": "fdType",
-        "effect": {"descriptor": "eventRDDescriptor"}
-    },
-    "CausedProcess": {
-        "parents": ["Process"],
-        "fdType": "fdType",
-        "affectedEntity": {"descriptor": "objectDescriptor"},
-        "affectedProcess": {"parameters": "affectedProcess"}
-    },
-    "MeasurePredication": {
-        "parents": ["Process"],
-        "measurement": {"descriptor": "scaleDescriptor"},
-        "state": {"method": "get_state"},
-        "dimension": "dimension"
-    },
-    "PossProcess": {
-        "parents": ["Process"],
-        "possessed": {"descriptor": "objectDescriptor"}
-    },
-    "CauseEffect": {
-        "parents": ["Process"],
-        "causalAgent": {"descriptor": "objectDescriptor"},
-        "causalProcess": {"parameters": "process1"},
-        "affectedProcess": {"parameters": "process2"},
-        "complexKind": "complexKind"
-    },
-    "Change": {
-        "parents": ["Process"],
-        "state": {"method": "get_state"},
-        "direction": "direction"
-    },
-    "Creation": {
-        "parents": ["Process"],
-        "creator": {"descriptor": "objectDescriptor"},
-        "createdThing": {"descriptor": "objectDescriptor"},
-        "intended_recipient": {"descriptor": "objectDescriptor"}
-    },
-    "ComplexProcess": {
-        "parents": ["Process"],
-        "process1": {"parameters": "process1"},
-        "process2": {"parameters": "process2"},
-        "complexKind": "complexKind"
-    },
-    "BoundedRegion": {
-        "interior": {"descriptor": "objectDescriptor"},
-        "exterior": {"descriptor": "objectDescriptor"},
-        "boundary": {"descriptor": "objectDescriptor"}
-    },
-    "Entity": {
-        "entityType": "entityType"
-    },
-    "Process": {
-        "protagonist": {"descriptor": "objectDescriptor"},
-        "actionary": "actionary",
-        "p_features": {"descriptor": "processFeatures"}
-    }
+    "templates": {
+        "MotionPath": {
+            "parents": ["Process"],
+            "control_state": "ongoing",
+            "heading": {
+                "descriptor": "headingDescriptor",
+                "default": {
+                    "headingDescriptor": "north"
+                }
+            },
+            "distance": {
+                "descriptor": "scaleDescriptor",
+                "default": {
+                    "scaleDescriptor": {
+                        "units": "inches",
+                        "value": 4.0,
+                        "property": "distance"
+                    }
+                }
+            },
+            "spg": {
+                "descriptor": "spgDescriptor"
+            },
+            "direction": "direction",
+            "speed": 0.5
+        },
+        "Communication": {
+            "parents": ["Process"],
+            "content": {
+                "eventDescription": "content"
+            },
+            "media": {
+                "descriptor": "objectDescriptor"
+            },
+            "listener": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "Thought": {
+            "parents": ["Process"],
+            "content": {
+                "eventDescription": "content"
+            },
+            "thinker": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "ObjectTransfer": {
+            "parents": ["ComplexProcess"],
+            "getter": {
+                "descriptor": "objectDescriptor"
+            },
+            "theme": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "Manipulation": {
+            "parents": ["Process"],
+            "manipulated_entity": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "Stasis": {
+            "parents": ["Process"],
+            "state": {
+                "method": "get_state"
+            }
+        },
+        "Quantity": {
+            "units": "units",
+            "property": "property",
+            "amount": {
+                "parameters": "amount"
+            }
+        },
+        "QuantitySchema": {
+            "value": 0.5,
+            "number": "number"
+        },
+        "ForceApplication": {
+            "parents": ["Process"],
+            "control_state": "ongoing",
+            "actedUpon": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "StagedProcess": {
+            "parents": ["Process"],
+            "control_state": "stageRole",
+            "process": {
+                "parameters": "process"
+            }
+        },
+        "Perception": {
+            "parents": ["Process"],
+            "content": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "ChangeLocation": {
+            "parents": ["Process"],
+            "landmark": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "CausalAction": {
+            "parents": ["Process"],
+            "fdType": "fdType",
+            "effect": {
+                "descriptor": "eventRDDescriptor"
+            }
+        },
+        "CausedProcess": {
+            "parents": ["Process"],
+            "fdType": "fdType",
+            "affectedEntity": {
+                "descriptor": "objectDescriptor"
+            },
+            "affectedProcess": {
+                "parameters": "affectedProcess"
+            }
+        },
+        "MeasurePredication": {
+            "parents": ["Process"],
+            "measurement": {
+                "descriptor": "scaleDescriptor"
+            },
+            "state": {
+                "method": "get_state"
+            },
+            "dimension": "dimension"
+        },
+        "PossProcess": {
+            "parents": ["Process"],
+            "possessed": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "CauseEffect": {
+            "parents": ["Process"],
+            "causalAgent": {
+                "descriptor": "objectDescriptor"
+            },
+            "causalProcess": {
+                "parameters": "process1"
+            },
+            "affectedProcess": {
+                "parameters": "process2"
+            },
+            "complexKind": "complexKind"
+        },
+        "Change": {
+            "parents": ["Process"],
+            "state": {
+                "method": "get_state"
+            },
+            "direction": "direction"
+        },
+        "Creation": {
+            "parents": ["Process"],
+            "creator": {
+                "descriptor": "objectDescriptor"
+            },
+            "createdThing": {
+                "descriptor": "objectDescriptor"
+            },
+            "intended_recipient": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "ComplexProcess": {
+            "parents": ["Process"],
+            "process1": {
+                "parameters": "process1"
+            },
+            "process2": {
+                "parameters": "process2"
+            },
+            "complexKind": "complexKind"
+        },
+        "BoundedRegion": {
+            "interior": {
+                "descriptor": "objectDescriptor"
+            },
+            "exterior": {
+                "descriptor": "objectDescriptor"
+            },
+            "boundary": {
+                "descriptor": "objectDescriptor"
+            }
+        },
+        "Entity": {
+            "entityType": "entityType"
+        },
+        "Process": {
+            "protagonist": {
+                "descriptor": "objectDescriptor"
+            },
+            "actionary": "actionary",
+            "p_features": {
+                "descriptor": "processFeatures"
+            }
+        },
+        "ThankSchema": {
+            "parents": ["Process"],
+            "recipient": {
+              "descriptor": "objectDescriptor"
+            },
+            "donor": {
+              "descriptor": "objectDescriptor"
+            },
+            "theme": {
+              "descriptor": "objectDescriptor"
+            },
+            "meta": {
+              "parameters": "meta"
+            }
+        }
     }
 }
