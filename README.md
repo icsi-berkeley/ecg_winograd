@@ -11,7 +11,7 @@ Make sure that ecg_grammars and ecg_framework_code are in adjacent folders.
 For more information about the system, look here: https://github.com/icsi-berkeley/ecg_homepage/wiki
 
 ## Example Sentences
-A few of the sentences we implemented.
+A few of the sentences we implemented:
 
 `the trophy did not fit into the suitcase because it was too [big/small]`
 
