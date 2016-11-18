@@ -22,6 +22,8 @@ class WinogradSpecializer(CoreSpecializer):
 
         # Used and maintained by the resolver step
         self.bridging_schemas = OrderedDict()
+        self.inferable_sources = OrderedDict()
+        self.inferable_targets = OrderedDict()
         self.RDs = OrderedDict()
         self.unresolved_RDs = []
 
@@ -46,11 +48,13 @@ class WinogradSpecializer(CoreSpecializer):
     def specialize(self, fs):
         self.crawl_schemas(fs)
         self.resolve_bridging_schemas(fs)
-        #self.resolve_referents_2(fs)
+        self.resolve_referents_with_inference(fs)
 
         # housekeeping
-        self.bridging_schemas = {}
-        self.RDs = {}
+        self.bridging_schemas = OrderedDict()
+        self.inferable_sources = OrderedDict()
+        self.inferable_targets = OrderedDict()
+        self.RDs = OrderedDict()
         self.unresolved_RDs = []
         return CoreSpecializer.specialize(self, fs)
 
@@ -59,7 +63,7 @@ class WinogradSpecializer(CoreSpecializer):
         Finds all bridging schemas, RDs and unresolved RDs in the semspec
         fs: FeatureStruct
         """
-        stack = [([], "m", fs.m)]
+        stack = [([], "m", fs.m), ([], "rootconstituent", fs.rootconstituent)]
         index_cache = set()
 
         while len(stack) > 0:
@@ -67,17 +71,21 @@ class WinogradSpecializer(CoreSpecializer):
             index_cache.add(value.__index__)
             if value.typesystem() == "SCHEMA":
                 if self.analyzer.issubtype("SCHEMA", value.type(), "BridgeSchema"):
-                    self.set_bridging_schema(value, parents + [name])
+                    self.save_bridging_schema(value, parents + [name])
                 if self.analyzer.issubtype("SCHEMA", value.type(), "RD"):
                     try:
                         unresolved = value.referent.type() == "antecedent"
-                        self.set_RD(value, parents + [name], unresolved)
+                        self.save_RD(value, parents + [name], unresolved)
                     except:
                         pass
+                if self.is_inferable(value):
+                    self.save_inferable(value, parents + [name])
             if value.has_filler():
                 for child_name, child_value in value.__items__():
                     if child_value.__index__ not in index_cache:
                         stack.append((parents + [name], child_name, child_value))
+
+        self.update_inferable_targets()
 
 
     def resolve_bridging_schemas(self, fs):
@@ -105,14 +113,83 @@ class WinogradSpecializer(CoreSpecializer):
                     if child_value.__index__ not in index_cache:
                         stack.append((child_name, child_value))
 
-    def resolve_referents_2(self, fs):
+    def resolve_referents_with_inference(self, fs):
         """
-        Resolves remaining unresolved RDs
+        Resolves RDs for which we have grammatically marked information and can make reasonable
+        inferences
         fs: FeatureStruct
         """
-        raise NotImplementedError()
+        if len(self.unresolved_RDs) == 0:
+            return
 
-    def set_bridging_schema(self, value, parents):
+
+        for index in self.inferable_targets:
+            target, target_parents = self.inferable_targets[index]
+            if target.type() == "IntensifierModification":
+                modification = target.modifiedThing
+                modifiedThing = modification.modifiedThing
+
+                for index in self.inferable_sources:
+                    source, source_parents = self.inferable_sources[index]
+                    if self.analyzer.issubtype("SCHEMA", source.type(), "RelativeScale"):
+                        if source.property.type() == modification.property.type():
+                            entailments = []
+
+                            if self.is_negated(fs, source, source_parents):
+                                if modification.scaleDirection.type() == "up":
+                                    entailments.append((modifiedThing, source.smaller))
+                                else:
+                                    entailments.append((modifiedThing, source.larger))
+                            else:
+                                if modification.scaleDirection.type() == "up":
+                                    entailments.append((modifiedThing, source.larger))
+                                else:
+                                    entailments.append((modifiedThing, source.smaller))
+
+                            if self.valid_resolution(entailments):
+                                self.unresolved_RDs.remove(modifiedThing.__index__)
+                                self.assign_RDs(entailments)
+                                break
+
+
+    def is_inferable(self, value):
+        return self.analyzer.issubtype(
+                    "SCHEMA", value.type(), "RelativeScale") or self.analyzer.issubtype(
+                                                                    "SCHEMA", value.type(), "IntensifierModification")
+
+    def save_inferable(self, value, parents):
+        """
+        Stores the inferable schema as a source for inference
+        value: Struct representing the schema
+        parents: list of strings in order of parents from original FeatureStruct
+        """
+        index = value.__index__
+        if value.has_filler():
+            self.inferable_sources[index] = (value, parents)
+
+    def update_inferable_targets(self):
+        """
+        Checks all inference sources and finds those that are targets for inference
+        """
+        indices_to_delete = []
+        for index in self.inferable_sources:
+            value, parents = self.inferable_sources[index]
+
+            # Determine if the inferable has any unresolved RDs. only handles one case right now
+            if self.analyzer.issubtype("SCHEMA", value.type(), "IntensifierModification"):
+                modification = value.modifiedThing
+                modifiedThing = modification.modifiedThing
+
+                if modifiedThing.__index__ in self.unresolved_RDs:
+                    if index not in self.inferable_targets:
+                        self.inferable_targets[index] = (value, parents)
+                        indices_to_delete.append(index)
+                        break
+
+        for index in indices_to_delete:
+            del self.inferable_sources[index]
+
+    def save_bridging_schema(self, value, parents):
         """
         Stores the bridging schema
         value: Struct representing the schema
@@ -146,9 +223,6 @@ class WinogradSpecializer(CoreSpecializer):
                 if is_parent:
                     continue
 
-                # this is an ugly way to store entailments. FIXME
-                entailments = {}
-
                 if bridge.kind.type() == "thanks":
                     entailments = [
                         (getattr(schema, 'agent'), getattr(bridge, 'bridgeAgent')),
@@ -163,12 +237,6 @@ class WinogradSpecializer(CoreSpecializer):
                 else:
                     embed()
                     Exception("Cannot have a bridging schema with kind %s", bridge.kind.type())
-                # for bridge_name, bridge_value in bridge.__items__():
-                #     if bridge_value.typesystem() == "SCHEMA" and self.analyzer.issubtype("SCHEMA", bridge_value.type(), "RD"):
-                #         if getattr(schema, bridge_name).__index__ in self.unresolved_RDs:
-                #             new_entailment = (getattr(schema, bridge_name), bridge_value)
-                #             if new_entailment[0].__index__ not in entailments:
-                #                 entailments[new_entailment[0].__index__] = new_entailment
 
                 if self.valid_resolution(entailments):
                     self.assign_RDs(entailments)
@@ -176,7 +244,7 @@ class WinogradSpecializer(CoreSpecializer):
 
         return None
 
-    def set_RD(self, value, parents, unresolved):
+    def save_RD(self, value, parents, unresolved):
         """
         Stores the RD
         value: Struct representing the RD
@@ -218,3 +286,15 @@ class WinogradSpecializer(CoreSpecializer):
             pronoun.__features__[pronoun.__index__] = pronoun.__features__[ref.__index__]
             if pronoun.__index__ in self.unresolved_RDs:
                 self.unresolved_RDs.remove(pronoun.__index__)
+
+    def is_negated(self, fs, value, parents):
+        current = fs
+
+        for attr in parents:
+            if hasattr(current, 'p_features'):
+                if hasattr(getattr(current, 'p_features'), 'negated'):
+                    if self.negated[getattr(getattr(current, 'p_features'), 'negated').type()]:
+                        return True
+            current = getattr(current, attr)
+
+        return False

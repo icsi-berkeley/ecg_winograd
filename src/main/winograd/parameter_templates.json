@@ -202,12 +202,11 @@
                 "descriptor": "processFeatures"
             }
         },
-        "ThankSchema": {
-            "parents": ["Process"],
-            "recipient": {
+        "GratitudeSchema": {
+            "agent": {
               "descriptor": "objectDescriptor"
             },
-            "donor": {
+            "patient": {
               "descriptor": "objectDescriptor"
             },
             "theme": {
@@ -215,6 +214,65 @@
             },
             "meta": {
               "parameters": "meta"
+            }
+        },
+        "RemovingSchema": {
+            "remover": {
+              "descriptor": "objectDescriptor"
+            },
+            "obstacle": {
+              "descriptor": "objectDescriptor"
+            }
+        },
+        "CleaningSchema": {
+            "cleaner": {
+              "descriptor": "objectDescriptor"
+            },
+            "portal": {
+              "descriptor": "objectDescriptor"
+            }
+        },
+        "CreateObstacleSchema": {
+            "portal": {
+              "descriptor": "objectDescriptor"
+            },
+            "causalAgent": {
+              "descriptor": "objectDescriptor"
+            }
+        },
+        "MusicSchema": {
+            "musician": {
+              "descriptor": "objectDescriptor"
+            },
+            "piece": {
+              "descriptor": "objectDescriptor"
+            },
+            "method": {
+              "descriptor": "objectDescriptor"
+            }
+        },
+        "ValueSchema": {
+            "evaluator": {
+              "descriptor": "objectDescriptor"
+            },
+            "valuedThing": {
+              "descriptor": "objectDescriptor"
+            }
+        },
+        "RelativeMotion": {
+            "object1": {
+              "descriptor": "objectDescriptor"
+            },
+            "object2": {
+              "descriptor": "objectDescriptor"
+            }
+        },
+        "ContainSchema": {
+            "container": {
+              "descriptor": "objectDescriptor"
+            },
+            "containedObject": {
+              "descriptor": "objectDescriptor"
             }
         }
     }
