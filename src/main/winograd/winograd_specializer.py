@@ -48,7 +48,7 @@ class WinogradSpecializer(CoreSpecializer):
     def specialize(self, fs):
         self.crawl_schemas(fs)
         self.resolve_bridging_schemas(fs)
-        self.resolve_referents_with_inference(fs)
+        self.resolve_references_with_inference(fs)
 
         # housekeeping
         self.bridging_schemas = OrderedDict()
@@ -91,7 +91,7 @@ class WinogradSpecializer(CoreSpecializer):
     def resolve_bridging_schemas(self, fs):
         """
         Attempts to match bridging schemas to other schemas in the semspec and use them to resolve
-        referents
+        references
         fs: FeatureStruct
         """
         if len(self.bridging_schemas) == 0 or len(self.unresolved_RDs) == 0:
@@ -113,7 +113,7 @@ class WinogradSpecializer(CoreSpecializer):
                     if child_value.__index__ not in index_cache:
                         stack.append((child_name, child_value))
 
-    def resolve_referents_with_inference(self, fs):
+    def resolve_references_with_inference(self, fs):
         """
         Resolves RDs for which we have grammatically marked information and can make reasonable
         inferences
@@ -259,7 +259,7 @@ class WinogradSpecializer(CoreSpecializer):
 
     def valid_resolution(self, entailments):
         """
-        Checks if a referent resolution is valid
+        Checks if a reference resolution is valid
         entailments: list of pairs (unresolved_RD, RD)
         return: Boolean
         """
