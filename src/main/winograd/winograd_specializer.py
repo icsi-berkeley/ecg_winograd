@@ -260,11 +260,13 @@ class WinogradSpecializer(CoreSpecializer):
     def valid_resolution(self, entailments):
         """
         Checks if a reference resolution is valid
-        entailments: list of pairs (unresolved_RD, RD)
+        entailments: list of pairs (RD, RD) -(unresolved_RD, RD)-
         return: Boolean
         """
         # TODO: Add more rules to avoid bad resolution like some of the transitive action heurisitcs
         for pronoun, ref in entailments:
+            if not hasattr(ref, 'referent') or getattr(ref, 'referent').type() == 'antecedent':
+                pronoun, ref = ref, pronoun
             if not self.is_compatible_referents(pronoun, ref):
                 return False
         return True
@@ -279,10 +281,12 @@ class WinogradSpecializer(CoreSpecializer):
     def assign_RDs(self, assignments):
         """
         Assigns the pronouns to be the value of their referents
-        assignments: list of pairs (unresolved_RD, RD)
+        assignments: list of pairs (RD, RD) -(unresolved_RD, RD)-
         """
         # I don't think this is the right way to resolve bindings. I shouldn't edit the schema
         for pronoun, ref in assignments:
+            if not hasattr(ref, 'referent') or getattr(ref, 'referent').type() == 'antecedent':
+                pronoun, ref = ref, pronoun
             pronoun.__features__[pronoun.__index__] = pronoun.__features__[ref.__index__]
             if pronoun.__index__ in self.unresolved_RDs:
                 self.unresolved_RDs.remove(pronoun.__index__)
