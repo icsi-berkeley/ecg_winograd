@@ -25,7 +25,6 @@ while True:
                 try:
                     ntuple = ws.specialize(fs)
                     pprint(ntuple)
-                    decoder.pprint_ntuple(ntuple)
                     break
                 except Exception as e:
                     traceback.print_exc()
