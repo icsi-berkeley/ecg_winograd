@@ -49,6 +49,7 @@ class WinogradSpecializer(CoreSpecializer):
         self.crawl_schemas(fs)
         self.resolve_bridging_schemas(fs)
         self.resolve_references_with_inference(fs)
+        self.resolve_references_greedily(fs)
 
         # housekeeping
         self.bridging_schemas = OrderedDict()
@@ -68,7 +69,6 @@ class WinogradSpecializer(CoreSpecializer):
 
         while len(stack) > 0:
             parents, name, value = stack.pop()
-            index_cache.add(value.__index__)
             if value.typesystem() == "SCHEMA":
                 if self.analyzer.issubtype("SCHEMA", value.type(), "BridgeSchema"):
                     self.save_bridging_schema(value, parents + [name])
@@ -80,10 +80,10 @@ class WinogradSpecializer(CoreSpecializer):
                         pass
                 if self.is_inferable(value):
                     self.save_inferable(value, parents + [name])
-            if value.has_filler():
+            if value.has_filler() and value.__index__ not in index_cache:
+                index_cache.add(value.__index__)
                 for child_name, child_value in value.__items__():
-                    if child_value.__index__ not in index_cache:
-                        stack.append((parents + [name], child_name, child_value))
+                    stack.append((parents + [name], child_name, child_value))
 
         self.update_inferable_targets()
 
@@ -151,6 +151,42 @@ class WinogradSpecializer(CoreSpecializer):
                                 self.assign_RDs(entailments)
                                 break
 
+
+    def resolve_references_greedily(self, fs):
+        """
+        Move some core specializer reference resolution over to before in order to allow simple
+        transitive action restrictions that were overly complicated later
+        """
+        for unresolved_RD_index in self.unresolved_RDs:
+            unresolved_RD, parents_list = self.RDs[unresolved_RD_index]
+            for index in self.RDs.keys():
+                if index not in self.unresolved_RDs:
+                    if self.is_compatible_referents(self.RDs[index][0], unresolved_RD):
+                        valid = True
+                        # Check for agent/patient distinction
+                        for parents in parents_list:
+                            companion = fs
+                            companion_parents = list(parents)
+
+                            if parents[-1] == "patient":
+                                companion_parents[-1] = "agent"
+                                for val in companion_parents:
+                                    companion = getattr(companion, val)
+                                if companion.__index__ == index or companion.referent.type() == self.RDs[index][0].referent.type():
+                                    valid = False
+                            elif parents[-1] == "agent":
+                                companion_parents[-1] = "patient"
+                                for val in companion_parents:
+                                    companion = getattr(companion, val)
+                                if companion.__index__ == index or companion.referent.type() == self.RDs[index][0].referent.type():
+                                    valid = False
+
+                            if not valid:
+                                break
+
+                        if valid:
+                            self.assign_RDs([(unresolved_RD, self.RDs[index][0])])
+                            break
 
     def is_inferable(self, value):
         return self.analyzer.issubtype(
@@ -253,9 +289,11 @@ class WinogradSpecializer(CoreSpecializer):
         """
         index = value.__index__
         if index not in self.RDs:
-            self.RDs[index] = (value, parents)
+            self.RDs[index] = (value, [parents])
             if unresolved:
                 self.unresolved_RDs.append(index)
+        else:
+            self.RDs[index][1].append(parents)
 
     def valid_resolution(self, entailments):
         """
@@ -265,15 +303,18 @@ class WinogradSpecializer(CoreSpecializer):
         """
         # TODO: Add more rules to avoid bad resolution like some of the transitive action heurisitcs
         for pronoun, ref in entailments:
+            compare_referent = False
             if not hasattr(ref, 'referent') or getattr(ref, 'referent').type() == 'antecedent':
                 pronoun, ref = ref, pronoun
-            if not self.is_compatible_referents(pronoun, ref):
+            if hasattr(pronoun, 'referent') and getattr(pronoun, 'referent').type() != 'antecedent':
+                compare_referent = True
+            if not self.is_compatible_referents(pronoun, ref, compare_referent):
                 return False
         return True
 
-    def is_compatible_referents(self, pronoun, ref):
+    def is_compatible_referents(self, pronoun, ref, compare_referent=False):
         for key, value in pronoun.__items__():
-            if hasattr(ref, key) and key != "referent" and (value and getattr(ref, key)):
+            if hasattr(ref, key) and (compare_referent or key != "referent") and (value and getattr(ref, key)):
                 if not self.is_compatible("ONTOLOGY", value.type(), getattr(ref, key).type()):
                     return False
         return True
